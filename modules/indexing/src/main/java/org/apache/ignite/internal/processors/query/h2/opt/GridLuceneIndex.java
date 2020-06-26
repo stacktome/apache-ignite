@@ -18,6 +18,7 @@
 package org.apache.ignite.internal.processors.query.h2.opt;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.ignite.IgniteCheckedException;
@@ -36,24 +37,10 @@ import org.apache.ignite.lang.IgniteBiTuple;
 import org.apache.ignite.spi.indexing.IndexingQueryFilter;
 import org.apache.ignite.spi.indexing.IndexingQueryCacheFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.LongPoint;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.util.BytesRef;
 import org.h2.util.JdbcUtils;
 import org.jetbrains.annotations.Nullable;
@@ -85,6 +72,11 @@ public class GridLuceneIndex implements AutoCloseable {
 
     /** */
     private final String[] idxdFields;
+
+    private static final String SORT_FIELD_NAME = "CREATEDAT"; // must be in CAPS
+    private boolean containsSortField() {
+        return Arrays.asList(idxdFields).contains(SORT_FIELD_NAME);
+    }
 
     /** */
     private final AtomicLong updateCntr = new GridAtomicLong();
@@ -176,7 +168,12 @@ public class GridLuceneIndex implements AutoCloseable {
             Object fieldVal = type.value(idxdFields[i], key, val);
 
             if (fieldVal != null) {
-                doc.add(new TextField(idxdFields[i], fieldVal.toString(), Field.Store.YES));
+                if(idxdFields[i].equals(SORT_FIELD_NAME)) {
+                    long longVal = (Long) fieldVal;
+                    doc.add(new SortedNumericDocValuesField(SORT_FIELD_NAME, longVal));
+                } else {
+                    doc.add(new TextField(idxdFields[i], fieldVal.toString(), Field.Store.YES));
+                }
 
                 stringsFound = true;
             }
@@ -281,7 +278,12 @@ public class GridLuceneIndex implements AutoCloseable {
                 .add(filter, BooleanClause.Occur.FILTER)
                 .build();
 
-            docs = searcher.search(query, limit > 0 ? limit : Integer.MAX_VALUE);
+            if (containsSortField()) {
+//                Sort sort = new Sort(SortField.FIELD_SCORE, new SortedNumericSortField(SORT_FIELD_NAME, SortField.Type.LONG, true));
+                Sort sort = new Sort(new SortedNumericSortField(SORT_FIELD_NAME, SortField.Type.LONG, true));
+                docs = searcher.search(query, limit > 0 ? limit : Integer.MAX_VALUE, sort);
+            } else
+                docs = searcher.search(query, limit > 0 ? limit : Integer.MAX_VALUE);
         }
         catch (Exception e) {
             U.closeQuiet(reader);

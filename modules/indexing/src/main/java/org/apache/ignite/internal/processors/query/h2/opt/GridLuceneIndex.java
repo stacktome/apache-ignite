@@ -169,7 +169,8 @@ public class GridLuceneIndex implements AutoCloseable {
 
             if (fieldVal != null) {
                 if(idxdFields[i].equals(SORT_FIELD_NAME)) {
-                    long longVal = Long.parseLong(fieldVal.toString());
+//                    long longVal = Long.parseLong(fieldVal.toString());
+                    long longVal = (Long) fieldVal;
                     doc.add(new SortedNumericDocValuesField(SORT_FIELD_NAME, longVal));
                 } else {
                     doc.add(new TextField(idxdFields[i], fieldVal.toString(), Field.Store.YES));

@@ -156,7 +156,35 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <serverId>stacktome-maven-releases</serverId>
+                    <nexusUrl>https://nexus.stacktome.com/repository/maven-releases/</nexusUrl>
+                    <skipStaging>true</skipStaging>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>stacktome-maven-snapshots</id>
+            <url>https://nexus.stacktome.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>stacktome-maven-releases</id>
+            <url>https://nexus.stacktome.com/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 </project>

@@ -35,7 +35,6 @@ import org.apache.ignite.internal.util.typedef.internal.U;
 import org.apache.ignite.lang.IgniteBiTuple;
 import org.apache.ignite.spi.indexing.IndexingQueryFilter;
 import org.apache.ignite.spi.indexing.IndexingQueryCacheFilter;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongPoint;
@@ -112,7 +111,7 @@ public class GridLuceneIndex implements AutoCloseable {
         dir = new GridLuceneDirectory(new GridUnsafeMemory(0));
 
         try {
-            writer = new IndexWriter(dir, new IndexWriterConfig(new StandardAnalyzer()));
+            writer = new IndexWriter(dir, new IndexWriterConfig(new CustomAnalyzer()));
         }
         catch (IOException e) {
             throw new IgniteCheckedException(e);

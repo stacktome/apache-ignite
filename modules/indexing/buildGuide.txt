@@ -1,0 +1,4 @@
+run in this dir:
+mvn clean compile package -DskipTests=true -Dmaven.javadoc.skip=true
+
+upload target/ignite-indexing-2.8.0.jar to https://nexus.stacktome.com/#browse/browse:maven-public

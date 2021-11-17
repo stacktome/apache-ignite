@@ -130,6 +130,10 @@ public class QueryEntityTypeDescriptor {
         }
 
         fullTextIdx.addField(field, 0, false);
+        System.out.println("INDEXES PRINT " + indexes.entrySet());
+        System.out.println("INDEXES SIZE " + indexes.size());
+        System.out.println("INDEX full text " + fullTextIdx);
+        System.out.println("INDEX field " + field);
     }
 
     /**

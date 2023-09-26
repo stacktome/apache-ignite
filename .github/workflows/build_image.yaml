@@ -39,14 +39,14 @@ jobs:
           ref: ${{ inputs.BRANCH }}
 
       - name: Build and Test
-        uses: s8ckerpunch/setup-java-and-maven@main
+        uses: stacktome/actions/setup_scala@master
         with:
-          JDK_VERSION: "17.0.8"
+          JAVA_VERSION: "17.0.8"
           MAVEN_VERSION: "3.9.0"
 
-      - name: List
-        id: list
-        run: |
-          mvn clean install -Pall-java,all-scala,licenses -DskipTests
-          mvn initialize -Pjavadoc
-          mvn initialize -Prelease
+    #   - name: List
+    #     id: list
+    #     run: |
+    #       mvn clean install -Pall-java,all-scala,licenses -DskipTests
+    #       mvn initialize -Pjavadoc
+    #       mvn initialize -Prelease

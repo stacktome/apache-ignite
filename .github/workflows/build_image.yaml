@@ -1,0 +1,49 @@
+name: Deploy Recommendation Service
+
+on:
+  workflow_dispatch:
+    inputs:
+      BRANCH:
+        description: Branch to use
+        required: true
+        type: string
+        default: staging
+
+      CLUSTER:
+        description: Environment
+        required: true
+        type: choice
+        default: staging
+        options:
+          - new-main-default
+          - staging
+
+      JDK_VERSION:
+        required: false
+        type: string
+
+      MAVEN_VERSION:
+        required: false
+        type: string
+
+jobs:
+  Deploy:
+    name: Deploy
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout to branch
+        id: checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.BRANCH }}
+
+      - name: Build and Test
+        uses: s8ckerpunch/setup-java-and-maven@main
+        with:
+          JAVA_VERSION: "20.0.2"
+          MAVEN_VERSION: "3.5.4"
+
+      - name: List
+        id: list
+        run: mvn -v

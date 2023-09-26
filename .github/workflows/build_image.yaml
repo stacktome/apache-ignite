@@ -1,4 +1,4 @@
-name: Deploy Recommendation Service
+name: Build Dcoker Image for Apache Ignite
 
 on:
   workflow_dispatch:

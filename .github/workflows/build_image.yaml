@@ -1,4 +1,4 @@
-name: Build Dcoker Image for Apache Ignite
+name: Build Docker Image for Apache Ignite
 
 on:
   workflow_dispatch:
@@ -46,4 +46,7 @@ jobs:
 
       - name: List
         id: list
-        run: mvn -v
+        run: |
+          mvn clean install -Pall-java,all-scala,licenses -DskipTests
+          mvn initialize -Pjavadoc
+          mvn initialize -Prelease

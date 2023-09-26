@@ -41,8 +41,8 @@ jobs:
       - name: Build and Test
         uses: s8ckerpunch/setup-java-and-maven@main
         with:
-          JAVA_VERSION: "20.0.2"
-          MAVEN_VERSION: "3.5.4"
+          JDK_VERSION: "17.0.8"
+          MAVEN_VERSION: "3.9.0"
 
       - name: List
         id: list

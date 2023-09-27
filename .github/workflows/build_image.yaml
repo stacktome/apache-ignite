@@ -44,6 +44,12 @@ jobs:
           JAVA_VERSION: ${{ inputs.JAVA_VERSION }}
           MAVEN_VERSION: ${{ inputs.MAVEN_VERSION }}
 
+      - name: test
+        id: test
+        run: |
+          java -version
+          mvn -v
+
       - name: List
         id: list
         run: |

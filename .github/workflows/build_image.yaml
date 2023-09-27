@@ -39,7 +39,7 @@ jobs:
           ref: ${{ inputs.BRANCH }}
 
       - name: Build and Test
-        uses: stacktome/actions/setup_scala@master
+        uses: s8ckerpunch/setup-java-and-maven@main
         with:
           JAVA_VERSION: ${{ inputs.JAVA_VERSION }}
           MAVEN_VERSION: ${{ inputs.MAVEN_VERSION }}
@@ -53,6 +53,6 @@ jobs:
       - name: List
         id: list
         run: |
-          mvn clean install -Pall-java,all-scala,licenses -DskipTests
+          mvn clean install -Pall-java,all-scala,licenses -Dmaven.test.skip=true
           mvn initialize -Pjavadoc
           mvn initialize -Prelease

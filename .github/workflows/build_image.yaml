@@ -44,12 +44,6 @@ jobs:
       #     JAVA_VERSION: ${{ inputs.JAVA_VERSION }}
       #     MAVEN_VERSION: ${{ inputs.MAVEN_VERSION }}
 
-      - name: Build and Test
-        uses: s8ckerpunch/cleanup-gcr@main
-        with:
-          IMAGE: ${{ inputs.JAVA_VERSION }}
-          TO_DATE: ${{ inputs.MAVEN_VERSION }}
-
       # - name: List
       #   id: list
       #   run: |

@@ -38,21 +38,21 @@ jobs:
         with:
           ref: ${{ inputs.BRANCH }}
 
+      # - name: Build and Test
+      #   uses: s8ckerpunch/setup-java-and-maven@main
+      #   with:
+      #     JAVA_VERSION: ${{ inputs.JAVA_VERSION }}
+      #     MAVEN_VERSION: ${{ inputs.MAVEN_VERSION }}
+
       - name: Build and Test
-        uses: s8ckerpunch/setup-java-and-maven@main
+        uses: s8ckerpunch/cleanup-gcr@main
         with:
-          JAVA_VERSION: ${{ inputs.JAVA_VERSION }}
-          MAVEN_VERSION: ${{ inputs.MAVEN_VERSION }}
+          IMAGE: ${{ inputs.JAVA_VERSION }}
+          TO_DATE: ${{ inputs.MAVEN_VERSION }}
 
-      - name: test
-        id: test
-        run: |
-          java -version
-          mvn -v
-
-      - name: List
-        id: list
-        run: |
-          mvn clean install -Pall-java,all-scala,licenses -Dmaven.test.skip=true
-          mvn initialize -Pjavadoc
-          mvn initialize -Prelease
+      # - name: List
+      #   id: list
+      #   run: |
+      #     mvn clean install -Pall-java,all-scala,licenses -Dmaven.test.skip=true
+      #     mvn initialize -Pjavadoc
+      #     mvn initialize -Prelease
